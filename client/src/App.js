@@ -1,20 +1,11 @@
+import React from 'react';
+import ToDoList from './ToDoList/ToDoList';
+
 function App() {
     return (
       <div className="App">
-          <h1>Welcome, William</h1>
-          <h4>Your Tasks</h4>
-
-          <div className="todos">
-            <div className="todo">
-                <div className="checkbox">
-
-                  <div className="text">Get the damn bread</div>
-
-                  <div className="delete-todo">x</div>
-                </div>
-            </div>
-
-          </div>
+          <h1>Don't Forget Or You Will Be In Trouble</h1>
+          <ToDoList></ToDoList>
       </div>
     );
 }

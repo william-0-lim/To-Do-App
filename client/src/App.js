@@ -1,5 +1,6 @@
 import React from 'react';
 import ToDoList from './ToDoList/ToDoList';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     return (

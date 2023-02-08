@@ -15,11 +15,8 @@
 	font-family: "Fira Sans", sans-serif;
 }
 
-body {
-	background-color: var(--dark-alt);
-	color: var(--light);
-}
-
 .App {
 	padding: 32px;
+    background-color: var(--dark-alt);
+	color: var(--light);
 }

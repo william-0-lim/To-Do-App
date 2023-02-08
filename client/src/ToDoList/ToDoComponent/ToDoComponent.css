@@ -2,3 +2,8 @@
     width: 300px;
     min-width: 275px;
 }
+
+.align-together {
+    display: inline-flex;
+    align-items: center;
+}

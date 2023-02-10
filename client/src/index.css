@@ -19,4 +19,10 @@
 	padding: 32px;
     background-color: var(--dark-alt);
 	color: var(--light);
+	height: 100vh;
+}
+
+.header {
+	color: lightblue;
+	text-align: center;
 }

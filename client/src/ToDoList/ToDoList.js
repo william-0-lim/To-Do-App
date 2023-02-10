@@ -10,7 +10,7 @@ const ToDoList = () => {
     <div>
         <Stack spacing={2}>
             <ToDoComponent></ToDoComponent>
-            <DoneComponent></DoneComponent>
+            {/* <DoneComponent></DoneComponent> */}
         </Stack>
     </div>
   );

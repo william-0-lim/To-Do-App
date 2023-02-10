@@ -26,8 +26,10 @@ app.get('/todos', async (req, res) => {
 
 // CREATE REQUESTS
 app.post('/todos/new', async (req,res) => {
+    console.log(req)
     const todo = new Todo({
-        text: req.body.text
+        text: req.body.text,
+        description: req.body.description
     });
 
     todo.save();

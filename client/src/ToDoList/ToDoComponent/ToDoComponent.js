@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Card, CardActions, CardContent, Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, Card, Col,  Pagination } from 'react-bootstrap';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const api_base = 'http://localhost:3001';
@@ -12,10 +12,26 @@ const ToDoComponent = () => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [addDialogStatus, setAddDialogStatus] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pages, setPages] = useState([]);
+    const [itemsPerPage] = useState(4);
+  
+    useEffect(() => {
+        GetTodos();
+        const storedPage = localStorage.getItem("currentPage");
+        if (storedPage) {
+          setCurrentPage(JSON.parse(storedPage));
+        }
+      }, []);
+      
+      useEffect(() => {
+        localStorage.setItem("currentPage", JSON.stringify(currentPage));
+        testing();
+      }, [currentPage]);
 
     useEffect(() => {
-		GetTodos();
-	}, []);
+        testing();
+    }, [todoList]);
       
     const GetTodos = () => {
 		fetch(api_base + '/todos')
@@ -23,6 +39,18 @@ const ToDoComponent = () => {
 			.then(data => setToDoList(data))
 			.catch((err) => console.error("Error: ", err));
 	}
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page.selected + 1);
+    };
+
+    const testing = () => {
+        const newPages = [];
+        for (let number = 1; number <= Math.ceil(todoList.length / itemsPerPage); number++) {
+            newPages.push(number);
+        }
+        setPages(newPages);
+    };
 
 	const createTask = async () => {
 		const data = await fetch(api_base + "/todos/new", {
@@ -59,31 +87,34 @@ const ToDoComponent = () => {
                 <h1>TO DO</h1>
                 <Button size="small" onClick={handleOpenAddDialog}>ADD</Button>
             </div>
-
-            {todoList.length > 0 ? todoList.map(todo => (
-                <Card key={todo._id} className="card-body">
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                        {todo.text}
-                        </Typography>
-                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        Time: 
-                        </Typography>
-                        <Typography variant="body2">
-                        {todo.description}
-                        <br />
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small">EDIT</Button>
-                        <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
-                    </CardActions>
-                </Card>
-            )) : (
-                <p>You currently have no tasks</p>
-            )}
-
-
+            <div className='card-group'>
+                {todoList.length > 0 ? todoList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(todo => (
+                    <Col key={todo._id}>
+                        <Card className="card-body">
+                            <Card.Header as="h5">{todo.text}</Card.Header>
+                            <Card.Body>
+                                <Card.Title>Special title treatment</Card.Title>
+                                <Card.Text>{todo.description}</Card.Text>
+                                <Button size="small">EDIT</Button>
+                                <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                )) : (
+                    <p>You currently have no tasks</p>
+                )}
+            </div>
+            <Pagination onPageChange={handlePageChange}>
+                {pages.map((page, index) => (
+                    <Pagination.Item 
+                    key={index} 
+                    active={currentPage === page} 
+                    onClick={() => setCurrentPage(page)}
+                    >
+                    {page}
+                    </Pagination.Item>
+                ))}
+            </Pagination>
 
             <Modal show={addDialogStatus} onHide={handleCloseAddDialog} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 
 import { Modal, Form, Card, Col,  Pagination } from 'react-bootstrap';
+import backgroundVideo from './background.mp4';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const api_base = 'http://localhost:3001';
@@ -83,8 +84,13 @@ const ToDoComponent = () => {
 
     return (
         <div>
+            
+            <video className='videoTag' autoPlay loop muted>
+                <source src={backgroundVideo} type='video/mp4' />
+            </video>
+
             <div className='align-together'>
-                <h1>TO DO</h1>
+                <h1 className='title'>TO DO</h1>
                 <Button size="small" onClick={handleOpenAddDialog}>ADD</Button>
             </div>
             <div className='card-group'>
@@ -104,7 +110,7 @@ const ToDoComponent = () => {
                     <p>You currently have no tasks</p>
                 )}
             </div>
-            <Pagination onPageChange={handlePageChange}>
+            <Pagination onChange={handlePageChange}>
                 {pages.map((page, index) => (
                     <Pagination.Item 
                     key={index} 
@@ -115,6 +121,7 @@ const ToDoComponent = () => {
                     </Pagination.Item>
                 ))}
             </Pagination>
+
 
             <Modal show={addDialogStatus} onHide={handleCloseAddDialog} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>

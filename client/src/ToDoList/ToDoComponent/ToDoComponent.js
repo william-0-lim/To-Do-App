@@ -11,6 +11,7 @@ const api_base = 'http://localhost:3001';
 
 const ToDoComponent = () => {
     const [todoList, setToDoList] = useState([]);
+    const [taskId, setTaskId] = useState();
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [editTaskName, setEditTaskName] = useState('');
@@ -100,6 +101,8 @@ const ToDoComponent = () => {
                 }
             })
         );
+
+        setEditDialogStatus(false);
     };
     
 
@@ -107,10 +110,13 @@ const ToDoComponent = () => {
     const handleOpenAddDialog = () => setAddDialogStatus(true);
 
     const handleCloseEditDialog = () => setEditDialogStatus(false);
-    const handleOpenEditDialog = () => setEditDialogStatus(true);
+    const handleOpenEditDialog = (todo) => {
+        setEditDialogStatus(true);
+        setTaskId(todo._id);
+        setEditTaskName(todo.text);
+        setEditDescriptionName(todo.description);
+    }
 
-    // console.log(editDescriptionName)
-    // console.log(editTaskName)
     return (
         <div>
             
@@ -130,7 +136,7 @@ const ToDoComponent = () => {
                             <Card.Body>
                                 <Card.Title>Special title treatment</Card.Title>
                                 <Card.Text>{todo.description}</Card.Text>
-                                <Button size="small" onClick={handleOpenEditDialog}>EDIT</Button>
+                                <Button size="small" onClick={() => handleOpenEditDialog(todo)}>EDIT</Button>
                                 <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
                             </Card.Body>
                         </Card>
@@ -138,7 +144,9 @@ const ToDoComponent = () => {
                 )) : (
                     <p>You currently have no tasks</p>
                 )}
+
             </div>
+            
             <Pagination onChange={handlePageChange}>
                 {pages.map((page, index) => (
                     <Pagination.Item 
@@ -165,12 +173,12 @@ const ToDoComponent = () => {
                 editDialogStatus={editDialogStatus}
                 handleCloseEditDialog={handleCloseEditDialog}
                 editTask={editToDo}
-                taskName={taskName}
-                setTaskName={setTaskName}
-                taskDescription={taskDescription}
-                setTaskDescription={setTaskDescription}
+                taskName={editTaskName}
+                setTaskName={setEditTaskName}
+                taskDescription={editDescriptionName}
+                setTaskDescription={setEditDescriptionName}
+                taskId={taskId}
             />
-
         </div>
     );
   };

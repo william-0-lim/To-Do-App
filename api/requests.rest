@@ -5,7 +5,7 @@ POST http://localhost:3001/todos/new
 Content-Type: application/json
 
 {
-    "text": "Task 2",
+    "text": "Task 45",
     "description": "Soon to work on other things"
 }
 
@@ -17,3 +17,13 @@ DELETE http://localhost:3001/todos/delete/
 
 ###
 PUT http://localhost:3001/todos/complete/
+
+
+###
+PUT http://localhost:3001/todos/update/63ef05c1c0efde47412a2e95
+Content-Type: application/json
+
+{
+    "text": "Test Editing",
+    "description": "Testing Edit"
+}

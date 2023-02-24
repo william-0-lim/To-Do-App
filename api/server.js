@@ -26,7 +26,6 @@ app.get('/todos', async (req, res) => {
 
 // CREATE REQUESTS
 app.post('/todos/new', async (req,res) => {
-    console.log(req)
     const todo = new Todo({
         text: req.body.text,
         description: req.body.description
@@ -45,6 +44,20 @@ app.delete('/todos/delete/:id', async (req,res) => {
 })
 
 
+// UPDATE TASK
+app.put('/todos/update/:id', async (req, res) => {
+    const updatedTask = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+      new: true
+    });
+
+    updatedTask.save();
+
+    res.json(updatedTask);
+  });
+  
+
+
+// PUTTING TASKS INTO DONE SECTION
 app.put('/todos/complete/:id', async (req,res) => {
     const todo = await Todo.findById(req.params.id);
 

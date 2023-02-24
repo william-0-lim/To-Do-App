@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
-
-import { Modal, Form, Card, Col,  Pagination } from 'react-bootstrap';
+import AddTaskModal from './Components/AddDialogComponent/AddDialog';
+import EditTaskModal from './Components/EditDialogComponent/EditDialog';
+import { Card, Col,  Pagination } from 'react-bootstrap';
 import backgroundVideo from './background.mp4';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,7 +13,10 @@ const ToDoComponent = () => {
     const [todoList, setToDoList] = useState([]);
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
+    const [editTaskName, setEditTaskName] = useState('');
+    const [editDescriptionName, setEditDescriptionName] = useState('');
     const [addDialogStatus, setAddDialogStatus] = useState(false);
+    const [editDialogStatus, setEditDialogStatus] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState([]);
     const [itemsPerPage] = useState(4);
@@ -27,12 +31,8 @@ const ToDoComponent = () => {
       
       useEffect(() => {
         localStorage.setItem("currentPage", JSON.stringify(currentPage));
-        testing();
-      }, [currentPage]);
-
-    useEffect(() => {
-        testing();
-    }, [todoList]);
+        settingPaignation();
+      }, [currentPage, todoList]);
       
     const GetTodos = () => {
 		fetch(api_base + '/todos')
@@ -45,7 +45,7 @@ const ToDoComponent = () => {
         setCurrentPage(page.selected + 1);
     };
 
-    const testing = () => {
+    const settingPaignation = () => {
         const newPages = [];
         for (let number = 1; number <= Math.ceil(todoList.length / itemsPerPage); number++) {
             newPages.push(number);
@@ -79,9 +79,38 @@ const ToDoComponent = () => {
 		setToDoList(todoList => todoList.filter(todo => todo._id !== data._id));
 	}
 
+    const editToDo = async (id) => {
+        const data = await fetch(api_base + '/todos/update/' + id , {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+				text: editTaskName,
+                description: editDescriptionName
+			})
+        }).then(res => res.json());
+    
+        setToDoList(
+            todoList.map(task => {
+                if (task._id === id) {
+                    return data;
+                } else {
+                    return task;
+                }
+            })
+        );
+    };
+    
+
     const handleCloseAddDialog = () => setAddDialogStatus(false);
     const handleOpenAddDialog = () => setAddDialogStatus(true);
 
+    const handleCloseEditDialog = () => setEditDialogStatus(false);
+    const handleOpenEditDialog = () => setEditDialogStatus(true);
+
+    // console.log(editDescriptionName)
+    // console.log(editTaskName)
     return (
         <div>
             
@@ -101,7 +130,7 @@ const ToDoComponent = () => {
                             <Card.Body>
                                 <Card.Title>Special title treatment</Card.Title>
                                 <Card.Text>{todo.description}</Card.Text>
-                                <Button size="small">EDIT</Button>
+                                <Button size="small" onClick={handleOpenEditDialog}>EDIT</Button>
                                 <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
                             </Card.Body>
                         </Card>
@@ -122,27 +151,26 @@ const ToDoComponent = () => {
                 ))}
             </Pagination>
 
+            <AddTaskModal
+                addDialogStatus={addDialogStatus}
+                handleCloseAddDialog={handleCloseAddDialog}
+                createTask={createTask}
+                taskName={taskName}
+                setTaskName={setTaskName}
+                taskDescription={taskDescription}
+                setTaskDescription={setTaskDescription}
+            />
 
-            <Modal show={addDialogStatus} onHide={handleCloseAddDialog} backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add a To Do Task</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group className="mb-3" controlId="taskName">
-                        <Form.Label>Task Name</Form.Label>
-                        <Form.Control placeholder="Start writing..." value={taskName} onChange={e => setTaskName(e.target.value)}/>
-                    </Form.Group>
+            <EditTaskModal
+                editDialogStatus={editDialogStatus}
+                handleCloseEditDialog={handleCloseEditDialog}
+                editTask={editToDo}
+                taskName={taskName}
+                setTaskName={setTaskName}
+                taskDescription={taskDescription}
+                setTaskDescription={setTaskDescription}
+            />
 
-                    <Form.Group className="mb-3" controlId="description">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control placeholder="Write the description of the task here..." value={taskDescription} onChange={e => setTaskDescription(e.target.value)} />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseAddDialog}>Close</Button>
-                    <Button variant="primary" onClick={createTask}>Add</Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
   };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
+import './AddDialog.css';
 
 const AddTaskModal = ({ addDialogStatus, handleCloseAddDialog, createTask }) => {
   const [validated, setValidated] = useState(false);
@@ -19,6 +20,9 @@ const AddTaskModal = ({ addDialogStatus, handleCloseAddDialog, createTask }) => 
     if (form.checkValidity() === true) {
       createTask(taskName, taskDescription);
       handleCloseAddDialog();
+      setTaskName('');
+      setTaskDescription('');
+      setValidated(false);
     }
 
     event.preventDefault();
@@ -31,25 +35,30 @@ const AddTaskModal = ({ addDialogStatus, handleCloseAddDialog, createTask }) => 
       </Modal.Header>
       <Modal.Body>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="taskName">
-            <Form.Label>Task Name</Form.Label>
-            <Form.Control required type="text" placeholder="Task Name" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
-            <Form.Control.Feedback type="invalid">
-              Please enter a task name.
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group className="mb-3" controlId="taskName">
+                <Form.Label>Task Name</Form.Label>
+                <Form.Control required type="text" placeholder="Task Name" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
+                <Form.Control.Feedback type="invalid">
+                Please enter a task name.
+                </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group className="mb-3" controlId="description">
-            <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea" rows={3} placeholder="Write the description of the task here..." value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} />
-          </Form.Group>
+            <Form.Group className="mb-3" controlId="description">
+                <Form.Label>Description</Form.Label>
+                <Form.Control as="textarea" rows={3} placeholder="Write the description of the task here..." value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} />
+            </Form.Group>
 
-          <Button variant="secondary" onClick={handleCloseAddDialog}>
-            Close
-          </Button>
-          <Button variant="primary" type="submit">
-            Add
-          </Button>
+            <div className='align-together'> 
+                <Button variant="primary" type="submit">
+                    Add
+                </Button>
+
+                <div className='padding-button'>
+                    <Button variant="secondary" onClick={handleCloseAddDialog}>
+                        Close
+                    </Button>
+                </div>
+            </div>
         </Form>
       </Modal.Body>
     </Modal>

@@ -15,7 +15,7 @@ const AddTaskModal = ({ addDialogStatus, handleCloseAddDialog, createTask, taskN
 
             <Form.Group className="mb-3" controlId="description">
                 <Form.Label>Description</Form.Label>
-                <Form.Control placeholder="Write the description of the task here..." value={taskDescription} onChange={e => setTaskDescription(e.target.value)} />
+                <Form.Control as="textarea" rows={3} placeholder="Write the description of the task here..." value={taskDescription} onChange={e => setTaskDescription(e.target.value)} />
             </Form.Group>
         </Modal.Body>
         <Modal.Footer>

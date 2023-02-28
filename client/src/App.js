@@ -7,7 +7,7 @@ function App() {
     return (
       <div>
           {/* <ParticleBackground id="tsparticles" /> */}
-          <h1 className='header neon'>Willy's To Do List</h1>
+          <h1 className='header neon'>TO DO OR NOT TO DO</h1>
           <ToDoList></ToDoList>
       </div>
     );

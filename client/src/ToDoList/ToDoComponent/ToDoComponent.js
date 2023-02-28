@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
 import AddTaskModal from './Components/AddDialogComponent/AddDialog';
 import EditTaskModal from './Components/EditDialogComponent/EditDialog';
-import { Card, Col,  Pagination } from 'react-bootstrap';
+import ToDoTask from './Components/ToDoTasksComponent/ToDoTask';
 import backgroundVideo from './background.mp4';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -124,40 +123,18 @@ const ToDoComponent = () => {
                 <source src={backgroundVideo} type='video/mp4' />
             </video>
 
-            <div className='align-together'>
-                <h1 className='title'>TO DO</h1>
-                <Button size="small" onClick={handleOpenAddDialog}>ADD</Button>
-            </div>
-            <div className='card-group'>
-                {todoList.length > 0 ? todoList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(todo => (
-                    <Col key={todo._id}>
-                        <Card className="card-body">
-                            <Card.Header as="h5">{todo.text}</Card.Header>
-                            <Card.Body>
-                                <Card.Title>Special title treatment</Card.Title>
-                                <Card.Text>{todo.description}</Card.Text>
-                                <Button size="small" onClick={() => handleOpenEditDialog(todo)}>EDIT</Button>
-                                <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                )) : (
-                    <p>You currently have no tasks</p>
-                )}
-
-            </div>
-            
-            <Pagination onChange={handlePageChange}>
-                {pages.map((page, index) => (
-                    <Pagination.Item 
-                    key={index} 
-                    active={currentPage === page} 
-                    onClick={() => setCurrentPage(page)}
-                    >
-                    {page}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
+            <ToDoTask
+                handleOpenAddDialog={handleOpenAddDialog}
+                todoList={todoList}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                handleOpenEditDialog={handleOpenEditDialog}
+                deleteTodo={deleteTodo}
+                handlePageChange={handlePageChange}
+                pages={pages}
+                setCurrentPage={setCurrentPage}
+            />
+        
 
             <AddTaskModal
                 addDialogStatus={addDialogStatus}
@@ -184,3 +161,4 @@ const ToDoComponent = () => {
   };
   
   export default ToDoComponent;
+

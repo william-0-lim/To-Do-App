@@ -1,15 +1,7 @@
 .align-together {
     display: inline-flex;
     align-items: center;
-}
-
-.videoTag {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    text-align: center;
 }
 
 h1.title {
@@ -27,6 +19,7 @@ h1.title {
     height: 100%;
     max-width: 250px;
     height: 250px !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
   
 .row-css {
@@ -45,3 +38,15 @@ h1.title {
 .card-margin {
     margin: 25px;
 }
+
+.outer-card {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.padding-buttons {
+    padding-left: 5px !important;
+}
+  
+  
+  
+  

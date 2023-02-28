@@ -15,7 +15,7 @@ const EditTaskModal = ({ editDialogStatus, handleCloseEditDialog, editTask, task
 
         <Form.Group className="mb-3" controlId="description">
           <Form.Label>Description</Form.Label>
-          <Form.Control value={taskDescription} onChange={e => setTaskDescription(e.target.value)} />
+          <Form.Control as="textarea" rows={3} value={taskDescription} onChange={e => setTaskDescription(e.target.value)} />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>

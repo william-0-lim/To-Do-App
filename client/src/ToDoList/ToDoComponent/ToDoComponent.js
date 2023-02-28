@@ -4,6 +4,7 @@ import AddTaskModal from './Components/AddDialogComponent/AddDialog';
 import EditTaskModal from './Components/EditDialogComponent/EditDialog';
 import ToDoTask from './Components/ToDoTasksComponent/ToDoTask';
 import backgroundVideo from './background.mp4';
+import { toast } from 'react-toastify';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const api_base = 'http://localhost:3001';
@@ -20,6 +21,7 @@ const ToDoComponent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState([]);
     const [itemsPerPage] = useState(4);
+    const [validated, setValidated] = useState(false);
   
     useEffect(() => {
         GetTodos();
@@ -53,24 +55,24 @@ const ToDoComponent = () => {
         setPages(newPages);
     };
 
-	const createTask = async () => {
-		const data = await fetch(api_base + "/todos/new", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json" 
-			},
-			body: JSON.stringify({
-				text: taskName,
-                description: taskDescription
+	const createTask = async (name, description) => {
+        const data = await fetch(api_base + "/todos/new", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({
+                text: name,
+                description: description
 
-			})
-		}).then(res => res.json());
-
-		setToDoList([...todoList, data]);
-
-		setAddDialogStatus(false);
-        setTaskName("");
-		setTaskDescription("");
+            })
+            }).then(res => res.json());
+              
+            setToDoList([...todoList, data]);
+            toast.success('Task saved successfully!', {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        
 	}
 
     const deleteTodo = async (id) => {
@@ -105,7 +107,7 @@ const ToDoComponent = () => {
     };
     
 
-    const handleCloseAddDialog = () => setAddDialogStatus(false);
+    const handleCloseAddDialog = () => setAddDialogStatus(false);;
     const handleOpenAddDialog = () => setAddDialogStatus(true);
 
     const handleCloseEditDialog = () => setEditDialogStatus(false);
@@ -140,10 +142,6 @@ const ToDoComponent = () => {
                 addDialogStatus={addDialogStatus}
                 handleCloseAddDialog={handleCloseAddDialog}
                 createTask={createTask}
-                taskName={taskName}
-                setTaskName={setTaskName}
-                taskDescription={taskDescription}
-                setTaskDescription={setTaskDescription}
             />
 
             <EditTaskModal

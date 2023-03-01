@@ -7,13 +7,11 @@ import backgroundVideo from './background.mp4';
 import { toast } from 'react-toastify';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const api_base = 'http://localhost:3001';
+const api_base = 'https://william-0-lim-turbo-spork-75r5674pr42r95p-3001.preview.app.github.dev';
 
 const ToDoComponent = () => {
     const [todoList, setToDoList] = useState([]);
     const [taskId, setTaskId] = useState();
-    const [taskName, setTaskName] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
     const [editTaskName, setEditTaskName] = useState('');
     const [editDescriptionName, setEditDescriptionName] = useState('');
     const [addDialogStatus, setAddDialogStatus] = useState(false);
@@ -21,7 +19,6 @@ const ToDoComponent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pages, setPages] = useState([]);
     const [itemsPerPage] = useState(4);
-    const [validated, setValidated] = useState(false);
   
     useEffect(() => {
         GetTodos();
@@ -72,7 +69,6 @@ const ToDoComponent = () => {
             toast.success('Task saved successfully!', {
                 position: toast.POSITION.TOP_RIGHT
             });
-        
 	}
 
     const deleteTodo = async (id) => {
@@ -81,7 +77,7 @@ const ToDoComponent = () => {
 		setToDoList(todoList => todoList.filter(todo => todo._id !== data._id));
 	}
 
-    const editToDo = async (id) => {
+    const editToDo = async (editTaskName, editDescriptionName, id) => {
         const data = await fetch(api_base + '/todos/update/' + id , {
             method: "PUT",
             headers: {
@@ -102,7 +98,9 @@ const ToDoComponent = () => {
                 }
             })
         );
-
+        toast.success('Task edited successfully!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
         setEditDialogStatus(false);
     };
     
@@ -148,11 +146,9 @@ const ToDoComponent = () => {
                 editDialogStatus={editDialogStatus}
                 handleCloseEditDialog={handleCloseEditDialog}
                 editTask={editToDo}
-                taskName={editTaskName}
-                setTaskName={setEditTaskName}
-                taskDescription={editDescriptionName}
-                setTaskDescription={setEditDescriptionName}
                 taskId={taskId}
+                taskName={editTaskName}
+                taskDescription={editDescriptionName}
             />
         </div>
     );

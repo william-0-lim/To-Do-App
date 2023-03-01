@@ -7,10 +7,13 @@ const cors = require('cors');
 const app = express();
 
 app.use(express.json());
-// Cross over protection
-app.use(cors());
 
-mongoose.connect("mongodb://127.0.0.1:27017/mern-todo", {
+// Cross over protection
+app.use(cors({
+    origin: '*'
+}));
+
+mongoose.connect("mongodb+srv://willlim7:sapsucks@tododatabase.eegc0zv.mongodb.net/?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })  .then(() => console.log("Connected to DB"))
@@ -20,8 +23,12 @@ const Todo = require('./models/Todo');
 
 // FETCH REQUESTS
 app.get('/todos', async (req, res) => {
-    const todos = await Todo.find();
-    res.json(todos);
+    try {
+        const todos = await Todo.find();
+        res.json(todos);
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 // CREATE REQUESTS

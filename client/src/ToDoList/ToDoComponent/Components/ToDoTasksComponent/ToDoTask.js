@@ -32,7 +32,9 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                             </Card>
                         </Col>
                     )) : (
-                        <p>You currently have no tasks</p>
+                        <div class="container">
+                            <p class="center-text text">No Tasks!! Go make some right now!!</p>
+                        </div>
                     )}
                 </Row>
             </Container>

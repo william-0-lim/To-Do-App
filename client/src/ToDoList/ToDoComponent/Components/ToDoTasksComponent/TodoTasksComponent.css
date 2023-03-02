@@ -62,7 +62,25 @@ h1.title {
     color: black; 
     text-shadow: 0 0 10px #21d86a, 0 0 20px #21d86a, 0 0 30px #21d86a, 0 0 40px #21d86a, 0 0 70px #21d86a, 0 0 80px #21d86a, 0 0 100px #21d86a;
 }
+
+.spaceship-button {
+    width: 120px;
+    height: 60px;
+    border-radius: 50px 50px 0 0;
+    border: 3px solid #fff;
+    background: #00f;
+    position: relative;
+    box-shadow: 0 2px 0 #666;
+    transition: all 0.2s ease-out;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 0 1px 0 #000;
+  }
   
+  .spaceship-button:hover {
+    background: #0ff;
+    box-shadow: 0 4px 0 #666;
+  }
   
   
   

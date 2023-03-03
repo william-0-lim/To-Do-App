@@ -1,25 +1,22 @@
 import React from 'react';
-import { Modal, Form, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
+import './ReadMoreModel.css'
 
-const ReadMoreModel = ({ description, openReadMore, closeReadMore, setCloseReadMore, setOpenReadMore }) => {
+const ReadMoreModel = ({ description, readMoreStatus, closeDialog }) => {
   return (
     <div>
-        <Modal show={openReadMore} onHide={setCloseReadMore} backdrop="static" keyboard={false}>
+        <Modal show={readMoreStatus} onHide={closeDialog} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
-            <Modal.Title>Task Details</Modal.Title>
+            <Modal.Title>Task Description</Modal.Title>
         </Modal.Header>
             <Modal.Body>
-                {description}
-                <div className='align-together'> 
-                    <Button variant="primary" type="submit">
-                        Add
+                <div className='text-modal'>
+                    {description}
+                </div>
+                <div className='add-padding'>
+                    <Button variant="secondary" onClick={closeDialog}>
+                        Close
                     </Button>
-
-                    <div className='padding-button'>
-                        <Button variant="secondary" onClick={setCloseReadMore}>
-                            Close
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
         </Modal>

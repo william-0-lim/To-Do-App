@@ -2,19 +2,19 @@ import React from 'react';
 import { useState } from 'react';
 import { Card, Col,  Pagination, Row, CardGroup, Container, Button } from 'react-bootstrap';
 import ReadMoreModel from './Components/ReadMoreModel';
-import './TodoTasksComponent.css';
+import './TodoTask.css';
 
 const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, handleOpenEditDialog, deleteTodo, handlePageChange, pages, setCurrentPage }) => {
-    const [closeReadMore, setCloseReadMore] = useState(false);
-    const [openReadMore, setOpenReadMore] = useState(false);
+    const [readMoreStatus, setReadMoreStatus] = useState(false);
     const [description, setDescription] = useState('');
 
     const openReadMoreModel = (description) => {
-        setOpenReadMore(true);
+        setReadMoreStatus(true);
         setDescription(description);
     }
 
-    const 
+    const closeDialog = () => { setReadMoreStatus(false) };
+
     return (
         <Card className='card-margin outer-card'>
             <Card.Header className='align-together'>
@@ -32,10 +32,10 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                                     <Card.Body>
                                         <Card.Title>{todo.text}</Card.Title>
                                         <Card.Text>
-                                        {todo.description.length > 108 ?
+                                        {todo.description.length > 100 ?
                                             <div>
-                                                {`${todo.description.substring(0, 108)}...`}
-                                                <button onClick={() => openReadMoreModel(todo.description)}>Expand More</button>
+                                                {`${todo.description.substring(0, 100)}...`}
+                                                <button className='button-change' onClick={() => openReadMoreModel(todo.description)}>Expand More</button>
                                             </div>
                                             : todo.description
                                         }
@@ -62,10 +62,8 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
             
             <ReadMoreModel
                 description={description}
-                openReadMore={openReadMore}
-                closeReadMore={closeReadMore}
-                setCloseReadMore={setCloseReadMore}
-                setOpenReadMore={setOpenReadMore}
+                readMoreStatus={readMoreStatus}
+                closeDialog={closeDialog}
             />
 
             <Pagination className='paignation-padding' onChange={handlePageChange}>

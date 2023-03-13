@@ -37,8 +37,16 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                                                 {`${todo.description.substring(0, 100)}...`}
                                                 <button className='button-change' onClick={() => openReadMoreModel(todo.description)}>Expand More</button>
                                             </div>
-                                            : todo.description
+                                            : 
+                                            <div className='description'>
+                                                todo.description
+                                            </div>
                                         }
+                                        </Card.Text>
+                                        <Card.Text>
+                                            <div className='due-date'>
+                                                {todo.dueDate.slice(0,10)}
+                                            </div>
                                         </Card.Text>
                                     </Card.Body>
                                     <Card.Footer>

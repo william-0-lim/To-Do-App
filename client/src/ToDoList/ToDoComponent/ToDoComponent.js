@@ -7,6 +7,7 @@ import backgroundVideo from './background.mp4';
 import { toast } from 'react-toastify';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SoonToBeDone from './Components/SoonToBeDoneDialogComponent/SoonToBeDone';
 const api_base = 'https://william-0-lim-turbo-spork-75r5674pr42r95p-3001.preview.app.github.dev';
 
 const ToDoComponent = () => {
@@ -14,6 +15,7 @@ const ToDoComponent = () => {
     const [taskId, setTaskId] = useState();
     const [editTaskName, setEditTaskName] = useState('');
     const [editDescriptionName, setEditDescriptionName] = useState('');
+    const [date, setDate] = useState(new Date());
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [editDialogStatus, setEditDialogStatus] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +54,7 @@ const ToDoComponent = () => {
         setPages(newPages);
     };
 
-	const createTask = async (name, description) => {
+	const createTask = async (name, description, dueDate) => {
         const data = await fetch(api_base + "/todos/new", {
             method: "POST",
             headers: {
@@ -60,8 +62,8 @@ const ToDoComponent = () => {
             },
             body: JSON.stringify({
                 text: name,
-                description: description
-
+                description: description,
+                dueDate: dueDate
             })
             }).then(res => res.json());
               
@@ -77,7 +79,7 @@ const ToDoComponent = () => {
 		setToDoList(todoList => todoList.filter(todo => todo._id !== data._id));
 	}
 
-    const editToDo = async (editTaskName, editDescriptionName, id) => {
+    const editToDo = async (editTaskName, editDescriptionName, id, date) => {
         const data = await fetch(api_base + '/todos/update/' + id , {
             method: "PUT",
             headers: {
@@ -85,7 +87,8 @@ const ToDoComponent = () => {
             },
             body: JSON.stringify({
 				text: editTaskName,
-                description: editDescriptionName
+                description: editDescriptionName,
+                dueDate: date
 			})
         }).then(res => res.json());
     
@@ -114,6 +117,7 @@ const ToDoComponent = () => {
         setTaskId(todo._id);
         setEditTaskName(todo.text);
         setEditDescriptionName(todo.description);
+        setDate(todo.dueDate);
     }
 
     return (
@@ -134,7 +138,9 @@ const ToDoComponent = () => {
                 pages={pages}
                 setCurrentPage={setCurrentPage}
             />
-        
+
+            <SoonToBeDone
+            />
 
             <AddTaskModal
                 addDialogStatus={addDialogStatus}
@@ -149,6 +155,7 @@ const ToDoComponent = () => {
                 taskId={taskId}
                 taskName={editTaskName}
                 taskDescription={editDescriptionName}
+                date={date}
             />
         </div>
     );

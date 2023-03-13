@@ -35,7 +35,8 @@ app.get('/todos', async (req, res) => {
 app.post('/todos/new', async (req,res) => {
     const todo = new Todo({
         text: req.body.text,
-        description: req.body.description
+        description: req.body.description,
+        dueDate: req.body.dueDate
     });
 
     todo.save();
@@ -53,7 +54,8 @@ app.delete('/todos/delete/:id', async (req,res) => {
 
 // UPDATE TASK
 app.put('/todos/update/:id', async (req, res) => {
-    const updatedTask = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+    const updatedTask = await Todo.findByIdAndUpdate(req.params.id, req.body, 
+    {
       new: true
     });
 

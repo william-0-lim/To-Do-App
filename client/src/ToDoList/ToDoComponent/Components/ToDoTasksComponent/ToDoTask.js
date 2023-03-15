@@ -39,7 +39,7 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                                             </div>
                                             : 
                                             <div className='description'>
-                                                todo.description
+                                                {todo.description}
                                             </div>
                                         }
                                         </Card.Text>

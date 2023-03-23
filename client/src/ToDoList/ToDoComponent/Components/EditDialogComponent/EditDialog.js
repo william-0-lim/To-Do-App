@@ -11,8 +11,7 @@ const EditTaskModal = ({ editDialogStatus, handleCloseEditDialog, editTask, task
   useEffect(() => {
     setEditTaskName(taskName);
     setEditTaskDescription(taskDescription);
-    console.log(date)
-    setDueDate(new Date(date).toISOString().substr(0, 10));
+    setDueDate(new Date(date).toISOString().substring(0, 10));
   }, [taskName, taskDescription, date]);
 
   const handleSubmit = (event) => {

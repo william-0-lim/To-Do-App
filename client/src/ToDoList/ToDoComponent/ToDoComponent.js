@@ -9,6 +9,8 @@ import axios from 'axios';
 import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SoonToBeDone from './Components/SoonToBeDoneDialogComponent/SoonToBeDone';
+import TasksDone from './Components/TasksDoneDialogComponent/TasksDone';
+
 const api_base = 'https://william-0-lim-turbo-spork-75r5674pr42r95p-3001.preview.app.github.dev';
 
 const ToDoComponent = () => {
@@ -17,35 +19,45 @@ const ToDoComponent = () => {
     const [editTaskName, setEditTaskName] = useState('');
     const [editDescriptionName, setEditDescriptionName] = useState('');
     const [soonDueTaskList, setSoonDueTaskList] = useState([]);
+    const [tasksDoneList, setTasksDoneList] = useState([]);
     const [date, setDate] = useState(new Date());
     const [addDialogStatus, setAddDialogStatus] = useState(false);
     const [editDialogStatus, setEditDialogStatus] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentSoonDuePage, setCurrentSoonDuePage] = useState(1);
+    const [currentTasksDonePage, setCurrentTasksDonePage] = useState(1);
     const [pages, setPages] = useState([]);
     const [soonDuePages, setSoonDuePages] = useState([]);
+    const [donePages, setDonePages] = useState([]);
     const [itemsPerPage] = useState(4);
   
     useEffect(() => {
         getTodos();
         const storedPage = localStorage.getItem("currentPage");
         const storedSoonDuePage = localStorage.getItem("currentSoonDuePage");
+        const storedTasksDonePage = localStorage.getItem("currentTasksDonePage");
 
         if (storedPage) {
-          setCurrentPage(JSON.parse(storedPage));
+            setCurrentPage(JSON.parse(storedPage));
         }
 
         if (storedSoonDuePage) {
             setCurrentSoonDuePage(JSON.parse(storedSoonDuePage));
         }
-      }, []);
+
+        if (storedTasksDonePage) {
+            setCurrentTasksDonePage(JSON.parse(storedTasksDonePage));
+        }
+    }, []);
       
-      useEffect(() => {
+    useEffect(() => {
         localStorage.setItem("currentPage", JSON.stringify(currentPage));
         localStorage.setItem("currentSoonDuePage", JSON.stringify(currentSoonDuePage));
+        localStorage.setItem("currentTasksDonePage", JSON.stringify(currentTasksDonePage));
         settingPaignation(todoList, setPages);
         settingPaignation(soonDueTaskList, setSoonDuePages);
-      }, [currentPage, todoList, currentSoonDuePage, soonDueTaskList]);
+        settingPaignation(tasksDoneList, setDonePages);
+    }, [currentPage, todoList, currentSoonDuePage, soonDueTaskList, currentTasksDonePage, tasksDoneList]);
 
     const getTodos = () => {
         axios.get(api_base + '/todos')
@@ -61,29 +73,39 @@ const ToDoComponent = () => {
         setCurrentPage(page.selected + 1);
     };
 
+    const handleTasksDonePageChange = (page) => {
+        setCurrentTasksDonePage(page.selected + 1);
+    }
+
     const separatingToDoList = (list) => {
-        // Separating the to do list by tasks and tasks that are due soon
+        // Separating the to do list by tasks and tasks that are due soon and Tasks Done List
         const regularToDoList = [];
         const dueDateSoonList = [];
+        const tasksDoneList = [];
         for (const data of list) {
-            if (isDueDateClose(data.dueDate)) {
-                dueDateSoonList.push(data);
-            } else {
+            const dueDate = new Date(data.dueDate);
+            const currentDate = new Date();
+            const dayDifference = Math.ceil((dueDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+            
+            // If the day difference is bigger than 2 days, it goes into Regular To Do List
+            if (dayDifference > 2) {
                 regularToDoList.push(data);
+            } else {
+                // If the day difference is less than 2 days and bigger than 0 days, then it goes into Due Date Soon 
+                if (dayDifference >= 0) {
+                    dueDateSoonList.push(data);
+                } else {
+                    // The rest going into Tasks Done List
+                    tasksDoneList.push(data);
+                }
             }
         }
 
         setToDoList(regularToDoList);
         setSoonDueTaskList(dueDateSoonList);
+        setTasksDoneList(tasksDoneList);
+        console.log(tasksDoneList)
     }
-
-    const isDueDateClose = (dateString) => {
-        const dueDate = new Date(dateString);
-        const currentDate = new Date();
-        const dayDifference = Math.ceil((dueDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
-      
-        return dayDifference <= 2 && dayDifference >= 0;
-    }    
 
     const settingPaignation = (list, settingPage) => {
         const newPages = [];
@@ -213,6 +235,15 @@ const ToDoComponent = () => {
                 taskName={editTaskName}
                 taskDescription={editDescriptionName}
                 date={date}
+            />
+
+            <TasksDone
+                tasksDoneList={tasksDoneList}
+                currentTasksDonePage={currentTasksDonePage}
+                itemsPerPage={itemsPerPage}
+                setCurrentTasksDonePage={setCurrentTasksDonePage}
+                handleTasksDonePageChange={handleTasksDonePageChange}
+                donePages={donePages}
             />
         </div>
     );

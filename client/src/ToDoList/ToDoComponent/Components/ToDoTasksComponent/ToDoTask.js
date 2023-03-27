@@ -1,19 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
 import { Card, Col,  Pagination, Row, CardGroup, Container, Button } from 'react-bootstrap';
-import ReadMoreModel from './Components/ReadMoreModel';
 import './TodoTask.css';
 
-const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, handleOpenEditDialog, deleteTodo, handlePageChange, pages, setCurrentPage }) => {
-    const [readMoreStatus, setReadMoreStatus] = useState(false);
-    const [description, setDescription] = useState('');
-
-    const openReadMoreModel = (description) => {
-        setReadMoreStatus(true);
-        setDescription(description);
-    }
-
-    const closeDialog = () => { setReadMoreStatus(false) };
+const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, handleOpenEditDialog, handlePageChange, pages, setCurrentPage, handleOpenDeleteDialog, openReadMoreModel }) => {
 
     return (
         <Card className='card-margin outer-card'>
@@ -53,7 +42,7 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                                         <div className='align-together'>
                                             <Button size="small" onClick={() => handleOpenEditDialog(todo)}>EDIT</Button>
                                             <div className='padding-buttons'>
-                                                <Button size="small" onClick={() => deleteTodo(todo._id)}>DELETE</Button>
+                                                <Button size="small" onClick={() => handleOpenDeleteDialog(todo)}>DELETE</Button>
                                             </div>
                                         </div>
                                     </Card.Footer>
@@ -67,12 +56,6 @@ const ToDoTask = ({ handleOpenAddDialog, todoList, currentPage, itemsPerPage, ha
                     </Row>
                 </Container>
             </CardGroup>
-            
-            <ReadMoreModel
-                description={description}
-                readMoreStatus={readMoreStatus}
-                closeDialog={closeDialog}
-            />
 
             <Pagination className='paignation-padding' onChange={handlePageChange}>
                 {pages.map((page, index) => (

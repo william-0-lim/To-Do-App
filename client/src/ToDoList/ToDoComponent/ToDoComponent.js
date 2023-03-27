@@ -10,6 +10,8 @@ import './ToDoComponent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SoonToBeDone from './Components/SoonToBeDoneDialogComponent/SoonToBeDone';
 import TasksDone from './Components/TasksDoneDialogComponent/TasksDone';
+import DeleteDialog from './Components/DeleteDialogComponent/DeleteDialog';
+import ReadMoreModel from './Components/ToDoTasksComponent/Components/ReadMoreModel';
 
 const api_base = 'https://william-0-lim-turbo-spork-75r5674pr42r95p-3001.preview.app.github.dev';
 
@@ -30,6 +32,11 @@ const ToDoComponent = () => {
     const [soonDuePages, setSoonDuePages] = useState([]);
     const [donePages, setDonePages] = useState([]);
     const [itemsPerPage] = useState(4);
+    const [deleteDialogStatus, setDeleteDialogStatus] = useState(false);
+    const [deleteTaskContent, setDeleteTaskContent] = useState();
+    const [readMoreStatus, setReadMoreStatus] = useState(false);
+    const [description, setDescription] = useState('');
+
   
     useEffect(() => {
         getTodos();
@@ -104,7 +111,6 @@ const ToDoComponent = () => {
         setToDoList(regularToDoList);
         setSoonDueTaskList(dueDateSoonList);
         setTasksDoneList(tasksDoneList);
-        console.log(tasksDoneList)
     }
 
     const settingPaignation = (list, settingPage) => {
@@ -140,6 +146,7 @@ const ToDoComponent = () => {
         axios.delete(api_base + '/todos/delete/' + id)
             .then(function (response) {
                 getTodos();
+                setDeleteDialogStatus(false);
                 toast.success('Task deleted successfully!', {
                     position: toast.POSITION.TOP_RIGHT
                 });
@@ -193,6 +200,18 @@ const ToDoComponent = () => {
         setDate(todo.dueDate);
     }
 
+    const handleCloseDeleteDialog = () => { setDeleteDialogStatus(false) };
+    const handleOpenDeleteDialog = (todo) => {
+        setDeleteDialogStatus(true);
+        setDeleteTaskContent(todo);
+    }
+
+    const closeDialog = () => { setReadMoreStatus(false) };
+    const openReadMoreModel = (description) => {
+        setReadMoreStatus(true);
+        setDescription(description);
+    }
+
     return (
         <div>
             
@@ -206,10 +225,11 @@ const ToDoComponent = () => {
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
                 handleOpenEditDialog={handleOpenEditDialog}
-                deleteTodo={deleteTodo}
                 handlePageChange={handlePageChange}
                 pages={pages}
                 setCurrentPage={setCurrentPage}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+                openReadMoreModel={openReadMoreModel}
             />
 
             <SoonToBeDone
@@ -219,6 +239,9 @@ const ToDoComponent = () => {
                 setCurrentSoonDuePage={setCurrentSoonDuePage}
                 handleSoonDuePageChange={handleSoonDuePageChange}
                 soonDuePages={soonDuePages}
+                handleOpenEditDialog={handleOpenEditDialog}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+                openReadMoreModel={openReadMoreModel}
             />
 
             <AddTaskModal
@@ -244,6 +267,21 @@ const ToDoComponent = () => {
                 setCurrentTasksDonePage={setCurrentTasksDonePage}
                 handleTasksDonePageChange={handleTasksDonePageChange}
                 donePages={donePages}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+                openReadMoreModel={openReadMoreModel}
+            />
+
+            <DeleteDialog
+                deleteDialogStatus={deleteDialogStatus}
+                handleCloseDeleteDialog={handleCloseDeleteDialog}
+                deleteTaskContent={deleteTaskContent}
+                deleteTodo={deleteTodo}
+            />
+            
+            <ReadMoreModel
+                description={description}
+                readMoreStatus={readMoreStatus}
+                closeDialog={closeDialog}
             />
         </div>
     );

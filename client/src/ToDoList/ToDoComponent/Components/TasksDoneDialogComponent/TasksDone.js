@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Col,  Pagination, Row, CardGroup, Container, Button } from 'react-bootstrap';
 import './TasksDone.css';
 
-const TasksDone = ({ tasksDoneList, currentTasksDonePage, itemsPerPage, setCurrentTasksDonePage, handleTasksDonePageChange, donePages }) => {
+const TasksDone = ({ tasksDoneList, currentTasksDonePage, itemsPerPage, setCurrentTasksDonePage, handleTasksDonePageChange, donePages, handleOpenDeleteDialog, openReadMoreModel }) => {
 
     return (
         <Card className='card-margin outer-card'>
@@ -21,7 +21,7 @@ const TasksDone = ({ tasksDoneList, currentTasksDonePage, itemsPerPage, setCurre
                                     {todo.description.length > 100 ?
                                         <div>
                                             {`${todo.description.substring(0, 100)}...`}
-                                            <button className='button-change'>Expand More</button>
+                                            <button className='button-change' onClick={() => openReadMoreModel(todo.description)}>Expand More</button>
                                         </div>
                                         : 
                                         <div className='description'>
@@ -37,7 +37,7 @@ const TasksDone = ({ tasksDoneList, currentTasksDonePage, itemsPerPage, setCurre
                                 </Card.Body>
                                 <Card.Footer>
                                     <div className='padding-buttons'>
-                                        <Button size="small">DELETE</Button>
+                                        <Button size="small" onClick={() => handleOpenDeleteDialog(todo)}>DELETE</Button>
                                     </div>
                                 </Card.Footer>
                             </Card>

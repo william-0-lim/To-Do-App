@@ -1,0 +1,9 @@
+.align-together {
+    display: inline-flex;
+    align-items: center;
+    text-align: center;
+}
+
+.padding-buttons {
+    padding-left: 5px !important;
+}

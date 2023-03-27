@@ -1,9 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
 import { Card, Col,  Pagination, Row, CardGroup, Container, Button } from 'react-bootstrap';
 import './SoonToBeDone.css';
 
-const SoonToBeDone = ({ soonDueTaskList, currentSoonDuePage, itemsPerPage ,setCurrentSoonDuePage, handleSoonDuePageChange, soonDuePages }) => {
+const SoonToBeDone = ({ soonDueTaskList, currentSoonDuePage, itemsPerPage ,setCurrentSoonDuePage, handleSoonDuePageChange, soonDuePages, handleOpenEditDialog, handleOpenDeleteDialog, openReadMoreModel }) => {
 
     return (
         <Card className='card-margin outer-card'>
@@ -22,7 +21,7 @@ const SoonToBeDone = ({ soonDueTaskList, currentSoonDuePage, itemsPerPage ,setCu
                                     {todo.description.length > 100 ?
                                         <div>
                                             {`${todo.description.substring(0, 100)}...`}
-                                            <button className='button-change'>Expand More</button>
+                                            <button className='button-change' onClick={() => openReadMoreModel(todo.description)}>Expand More</button>
                                         </div>
                                         : 
                                         <div className='description'>
@@ -38,9 +37,9 @@ const SoonToBeDone = ({ soonDueTaskList, currentSoonDuePage, itemsPerPage ,setCu
                                 </Card.Body>
                                 <Card.Footer>
                                     <div className='align-together'>
-                                        <Button size="small" >EDIT</Button>
+                                        <Button size="small" onClick={() => handleOpenEditDialog(todo)}>EDIT</Button>
                                         <div className='padding-buttons'>
-                                            <Button size="small">DELETE</Button>
+                                            <Button size="small" onClick={() => handleOpenDeleteDialog(todo)}>DELETE</Button>
                                         </div>
                                     </div>
                                 </Card.Footer>

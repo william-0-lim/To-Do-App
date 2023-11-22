@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^6.9.0",
-    "mongose": "0.0.2-security"
+    "mongoose": "^6.12.3",
+    "mongose": "0.0.2-security",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

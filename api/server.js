@@ -4,16 +4,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const app = express();
+// Handle Email sending
+const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 
-app.use(express.json());
+require('dotenv').config();
+const app = express();
 
 // Cross over protection
 app.use(cors({
     origin: '*'
 }));
 
-mongoose.connect("mongodb+srv://willlim7:sapsucks@tododatabase.eegc0zv.mongodb.net/?retryWrites=true&w=majority", {
+app.use(express.json());
+mongoose.set('strictQuery', false);
+
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@personaldatabase.w8h9r3l.mongodb.net/?authSource=personalDatabase&authMechanism=SCRAM-SHA-1`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })  .then(() => console.log("Connected to DB"))
@@ -77,6 +83,43 @@ app.put('/todos/complete/:id', async (req,res) => {
     res.json(todo);
 })
 
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+});
 
+// A function call to send an email
+const sendEmail = (task) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: process.env.EMAIL_USERNAME,
+        subject: 'Task Due Soon',
+        text: `Task "${task.name}" is due on ${task.dueDate}. ${task.description}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+};
+
+// Scheduled task to check for due tasks every day at 9 AM
+cron.schedule('0 9 * * *', async () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    const dueTasks = await Todo.find({ dueDate: { $lte: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000) } });
+  
+    dueTasks.forEach((task) => {
+      sendEmail(task);
+    });
+});
 
 app.listen(3001, () => console.log("Server started on port 3001"));
